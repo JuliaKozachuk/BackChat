@@ -5,8 +5,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func ConnectDB() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=127.0.0.1 port=5432 user=postgres dbname=backchat password=qwerty sslmode=disable")
+var DB *gorm.DB
+
+func ConnectDB(postgres_data string) {
+
+	db, err := gorm.Open("postgres", postgres_data)
 	if err != nil {
 		panic("Не удалось подключиться к базе данных")
 	}
@@ -16,5 +19,5 @@ func ConnectDB() *gorm.DB {
 	db.AutoMigrate(&Roles{})
 	db.AutoMigrate(&Users{})
 
-	return db
+	DB = db
 }
