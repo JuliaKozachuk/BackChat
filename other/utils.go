@@ -1,15 +1,14 @@
-package connectDB
+package other
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/joho/godotenv"
 )
 
-func connectBackChat() {
+func postgresUrl() string {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -22,5 +21,6 @@ func connectBackChat() {
 	sslmode := os.Getenv("DB_SSLMODE")
 
 	postgres_data := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s ", host, port, user, dbname, password, sslmode)
-	migrations.ConnectDB(postgres_data)
+
+	return postgres_data
 }
