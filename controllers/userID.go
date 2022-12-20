@@ -9,10 +9,10 @@ import (
 )
 
 type CreateUserInput struct {
-	ID_user  int    `json:"user_id" binding:"required"`
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+	//ID_user  int    `json:"user_id" binding:"required"`
+	Login    string `json:"login" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
 func GetAllUsers(context *gin.Context) {
@@ -40,7 +40,7 @@ func CreateUser(context *gin.Context) {
 		return
 	}
 
-	user := migrations.Users{ID_user: input.ID_user, Login: input.Login, Password: input.Password, Email: input.Email}
+	user := migrations.Users{Login: input.Login, Password: input.Password, Email: input.Email}
 	migrations.DB.Create(&user)
 
 	context.JSON(http.StatusOK, gin.H{"user": user})
