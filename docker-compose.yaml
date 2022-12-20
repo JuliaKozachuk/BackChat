@@ -5,7 +5,7 @@ services:
     restart: always
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1  --requirepass qwerty
+    command: redis-server --requirepass qwerty
     volumes: 
       - cache:/data
 volumes:
