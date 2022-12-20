@@ -3,9 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/JuliaKozachuk/BackChat/migrations"
-
 	"github.com/JuliaKozachuk/BackChat/controllers"
+	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/redisconnect"
 	"github.com/gin-gonic/gin"
 )
