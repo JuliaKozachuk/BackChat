@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/JuliaKozachuk/BackChat/redis"
+	"github.com/JuliaKozachuk/BackChat/connectredis"
 	"github.com/joho/godotenv"
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	redis.ExampleClient()
+	connectredis.ExampleClient()
 
 	err := godotenv.Load()
 	if err != nil {
