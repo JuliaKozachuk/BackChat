@@ -1,9 +1,11 @@
 package controllers
 
 import (
-	"net/http"
+	//"net/http"
 
 	"github.com/JuliaKozachuk/BackChat/migrations"
+
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +27,7 @@ func GetAllUsers(context *gin.Context) {
 func GetUser(context *gin.Context) {
 	// Проверяем имеется ли запись
 	var usersID migrations.Users
-	if err := migrations.DB.Where("id = ?", context.Param("ID_user")).First(&usersID).Error; err != nil {
+	if err := migrations.DB.Where("id_user = ?", context.Param("ID_user")).First(&usersID).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Запись не существует"})
 		return
 	}
@@ -44,4 +46,16 @@ func CreateUser(context *gin.Context) {
 	migrations.DB.Create(&user)
 
 	context.JSON(http.StatusOK, gin.H{"user": user})
+}
+func DeleteUser(context *gin.Context) {
+
+	var user migrations.Users
+	if err := migrations.DB.Where("id_user=id_user", context.Param("id_user")).First(&user).Error; err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"users": "Запись не существует"})
+		return
+	}
+
+	migrations.DB.Delete(&user)
+
+	context.JSON(http.StatusOK, gin.H{"users": true})
 }
