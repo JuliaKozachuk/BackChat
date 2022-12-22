@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
+	"C:\Users\Mi\projects\BackChat\generate"
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/redisconnect"
 	"github.com/gin-gonic/gin"
