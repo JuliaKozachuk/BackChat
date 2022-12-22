@@ -23,7 +23,7 @@ func main() {
 	route := gin.Default()
 
 	migrations.ConnectDB(postgresUrl())
-	generate.numbergenerate()
+	controllers.numbergenerate()
 
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
@@ -54,15 +54,16 @@ func postgresUrl() string {
 	return postgres_data
 }
 func sendEmail(context *gin.Context) {
+	text := controllers.numbergenerate
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
 	rkey := os.Getenv("RAPID_KEY")
 	rhost := os.Getenv("RAPID_HOST")
 	//rapid_key := fmt.Sprintf("rkey=%s", rkey)
 	//rapid_host := fmt.Sprintf("rhost=%s", rhost)
 
-	payload := strings.NewReader("{\r\"personalizations\": [\r {\r\"to\": [\r{\r  \"email\": \"sunrise3323@gmail.com\"\r  }\r ],\r \"subject\": \"generation.numbergeneration=generate.numbergenerate\"\r }\r],\r \"from\":{\r \"email\": \"uliakozacuk649@gmail.com\"\r},\r \"content\": [\r {\r  \"type\": \"text/plain\",\r  \"value\": \"generation.numbergeneration=generate.numbergenerate\"\r }\r]\r}")
+	payload := strings.NewReader("{\r\"personalizations\": [\r {\r\"to\": [\r{\r  \"email\": \"sunrise3323@gmail.com\"\r  }\r ],\r \"subject\": \"controllers.numbergeneration=controllers.numbergenerate\"\r }\r],\r \"from\":{\r \"email\": \"uliakozacuk649@gmail.com\"\r},\r \"content\": [\r {\r  \"type\": \"text/plain\",\r  \"value\": \"contorllers.numbergeneration=controllers.numbergenerate\"\r }\r]\r}")
 
-	req, _ := http.NewRequest("POST", url, payload)
+	req, _ := http.NewRequest("POST", url, payload, text)
 
 	req.Header.Add("content-type", "application/json")
 	req.Header.Add("X-RapidAPI-Key", rkey)

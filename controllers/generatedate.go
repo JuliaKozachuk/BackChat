@@ -1,4 +1,4 @@
-package generate
+package controllers
 
 import (
 	"crypto/rand"
