@@ -25,7 +25,7 @@ func GetAllUsers(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"ID_user": usersID})
 }
 func GetUser(context *gin.Context) {
-	// Проверяем имеется ли запись
+
 	var usersID migrations.Users
 	if err := migrations.DB.Where("id_user = ?", context.Param("ID_user")).First(&usersID).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Запись не существует"})

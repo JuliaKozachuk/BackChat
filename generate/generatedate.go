@@ -6,8 +6,11 @@ import (
 	"math/big"
 )
 
-func numbergenerate() {
-	r, err := rand.Int(rand.Reader, big.NewInt(80))
-	fmt.Println(r, err)
+func numbergenerate() int64 {
+	safeNum, err := rand.Int(rand.Reader, big.NewInt(800000))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return safeNum.Int64()
 
 }
