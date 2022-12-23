@@ -24,16 +24,7 @@ type AuthorizationUser struct {
 	//Verification_code string `json:"email" binding:"required"`
 }
 
-// генерация рандомных чисел
-func numbergenerate() int64 {
-	safeNum, err := rand.Int(rand.Reader, big.NewInt(800000))
-	if err != nil {
-		fmt.Println(err)
-	}
-	return safeNum.Int64()
-
-}
-
+// создаем нового Юзера
 func SignUp(context *gin.Context) {
 	var Email AuthorizationUser
 	if err := context.ShouldBindJSON(&Email); err != nil {
@@ -47,10 +38,11 @@ func SignUp(context *gin.Context) {
 	migrations.DB.Create(&user)
 	fmt.Printf("user: %v", user)
 
-	sendUserEmail(Email.Email, "77777777")
+	sendUserEmail(Email.Email, "77777777") //получает агументы из функции "SignUp"
 
 }
 
+// отправляет код подтверждения для созданного юзера
 func sendUserEmail(email string, code string) {
 
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
@@ -75,4 +67,14 @@ func sendUserEmail(email string, code string) {
 
 	fmt.Println(res)
 	fmt.Println(string(body))
+}
+
+// генерация рандомных чисел для кода
+func numbergenerate() int64 {
+	safeNum, err := rand.Int(rand.Reader, big.NewInt(800000))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return safeNum.Int64()
+
 }
