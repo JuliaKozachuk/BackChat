@@ -21,7 +21,7 @@ type AuthorizationUser struct {
 	//Verification_code string `json:"email" binding:"required"`
 }
 
-func Params(context *gin.Context) {
+func SignUp(context *gin.Context) {
 	var Email AuthorizationUser
 	if err := context.ShouldBindJSON(&Email); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
