@@ -3,10 +3,13 @@ package controllers
 import (
 
 	//"net/http"
+	"crypto/rand"
 	"fmt"
 	"io/ioutil"
+	"math/big"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/JuliaKozachuk/BackChat/migrations"
@@ -19,6 +22,16 @@ type AuthorizationUser struct {
 	Password string `json:"password"`
 	Email    string `json:"email" binding:"required,email"`
 	//Verification_code string `json:"email" binding:"required"`
+}
+
+// генерация рандомных чисел
+func numbergenerate() int64 {
+	safeNum, err := rand.Int(rand.Reader, big.NewInt(800000))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return safeNum.Int64()
+
 }
 
 func SignUp(context *gin.Context) {
@@ -43,13 +56,10 @@ func sendUserEmail(email string, code string) {
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
 	rkey := os.Getenv("RAPID_KEY")
 	rhost := os.Getenv("RAPID_HOST")
-	//rapid_key := fmt.Sprintf("rkey=%s", rkey)
-	//rapid_host := fmt.Sprintf("rhost=%s", rhost)
-	// numb := numbergenerate()
-	// autoriseUser := controllers.AuthorizationUser()
-	// email := autoriseUser
 
-	//payload:=strings.NewReader(`{"personalizations": [{"to": [{"email": "uliakozacuk649@gmail.com"}],"subject": keynumb}],"from": {"email": "sunrise3323@gmail.com"},"content": [{"type": "text/plain","value": "Hello, World!"}]}`)
+	numb := numbergenerate()
+	code = strconv.Itoa(int(numb))
+
 	payload := strings.NewReader("{\r\"personalizations\": [\r{\r\"to\": [\r{\r\"email\": \"" + email + "\"\r}\r],\r\"subject\": \"password:" + code + "\"\r}\r],\r\"from\": {\r\"email\": \"uliakozacuk649@gmail.com\"\r},\r\"content\": [\r{\r\"type\": \"text/plain\",\r\"value\": \"password:" + code + "\"\r}\r]\r}")
 
 	req, _ := http.NewRequest("POST", url, payload)

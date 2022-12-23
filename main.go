@@ -1,15 +1,10 @@
 package main
 
 import (
-	"crypto/rand"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"math/big"
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
 
@@ -26,7 +21,7 @@ func main() {
 	route := gin.Default()
 
 	migrations.ConnectDB(postgresUrl())
-	numbergenerate()
+	controllers.numbergenerate()
 
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
@@ -37,17 +32,8 @@ func main() {
 
 	route.POST("/signup", controllers.SignUp)
 
-	route.POST("/Post", sendEmail)
 	route.DELETE("/del", controllers.DeleteUser)
-	// route.POST("/uniquecod", controllers.AuthorizationUser)
-	route.POST("/test", func(c *gin.Context) {
 
-		ids := c.Param("email")
-		names := c.PostFormMap("login")
-
-		fmt.Printf("ids: %v, names: %v", ids, names)
-
-	})
 	route.Run()
 }
 
@@ -67,50 +53,4 @@ func postgresUrl() string {
 	postgres_data := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s ", host, port, user, dbname, password, sslmode)
 
 	return postgres_data
-}
-
-// генерация рандомных чисел
-func numbergenerate() int64 {
-	safeNum, err := rand.Int(rand.Reader, big.NewInt(800000))
-	if err != nil {
-		fmt.Println(err)
-	}
-	return safeNum.Int64()
-
-}
-
-//func key_number(){
-//numb:=numbergenerate()
-//keynumb:=strconv.Itoa(int64(numb),800000)
-
-// }
-// отправка писем с генерацией числа по почте
-func sendEmail(context *gin.Context) {
-
-	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
-	rkey := os.Getenv("RAPID_KEY")
-	rhost := os.Getenv("RAPID_HOST")
-	//rapid_key := fmt.Sprintf("rkey=%s", rkey)
-	//rapid_host := fmt.Sprintf("rhost=%s", rhost)
-	numb := numbergenerate()
-	keynumb := strconv.Itoa(int(numb))
-	// autoriseUser := controllers.AuthorizationUser()
-	// email := autoriseUser
-
-	//payload:=strings.NewReader(`{"personalizations": [{"to": [{"email": "uliakozacuk649@gmail.com"}],"subject": keynumb}],"from": {"email": "sunrise3323@gmail.com"},"content": [{"type": "text/plain","value": "Hello, World!"}]}`)
-	payload := strings.NewReader("{\r\"personalizations\": [\r{\r\"to\": [\r{\r\"email\": \"" + "\"\r}\r],\r\"subject\": \"password:" + keynumb + "\"\r}\r],\r\"from\": {\r\"email\": \"uliakozacuk649@gmail.com\"\r},\r\"content\": [\r{\r\"type\": \"text/plain\",\r\"value\": \"password:" + keynumb + "\"\r}\r]\r}")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("X-RapidAPI-Key", rkey)
-	req.Header.Add("X-RapidAPI-Host", rhost)
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
 }
