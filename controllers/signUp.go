@@ -25,20 +25,21 @@ type AuthorizationUser struct {
 }
 
 // создаем нового Юзера
-func SignUp(context *gin.Context) {
-	var Email AuthorizationUser
-	if err := context.ShouldBindJSON(&Email); err != nil {
+func SignUpInput(context *gin.Context) {
+	var InputSignUp AuthorizationUser
+	if err := context.ShouldBindJSON(&InputSignUp); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Printf("user: %v", Email.Email)
+	fmt.Printf("user: %v", InputSignUp.Email)
+	controllers.isCorrectPassword(InputSignUp.Password)
 
-	user := migrations.Users{Login: Email.Login, Email: Email.Email}
+	user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: InputSignUp.Password}
 	migrations.DB.Create(&user)
 	fmt.Printf("user: %v", user)
 
-	sendUserEmail(Email.Email, "77777777") //получает агументы из функции "SignUp"
+	sendUserEmail(InputSignUp.Email, "code") //получает агументы из функции "SignUp"
 
 }
 
