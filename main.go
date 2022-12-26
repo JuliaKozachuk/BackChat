@@ -29,7 +29,7 @@ func main() {
 	route.GET("/users:id", controllers.GetUser)
 	route.POST("/user", controllers.CreateUser)
 
-	route.POST("/signup", controllers.SignUp)
+	route.POST("/signup", controllers.SignUpInput)
 
 	route.DELETE("/del", controllers.DeleteUser)
 

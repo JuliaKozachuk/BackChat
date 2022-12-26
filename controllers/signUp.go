@@ -14,12 +14,13 @@ import (
 
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthorizationUser struct {
 	//ID_user           uint   `json:"id_user" binding:"required"`
 	Login    string `json:"login" binding:"required"`
-	Password string `json:"password"`
+	Password string `json:"password"binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	//Verification_code string `json:"email" binding:"required"`
 }
@@ -33,13 +34,18 @@ func SignUpInput(context *gin.Context) {
 	}
 
 	fmt.Printf("user: %v", InputSignUp.Email)
-	controllers.isCorrectPassword(InputSignUp.Password)
+	sendUserEmail(InputSignUp.Email, "code") //получает агументы из функции "SignUp"
 
+	pass := []byte(InputSignUp.Password)
+
+	isCorrectPassword(pass)
+	InputSignUp.Password = isCorrectPassword(pass)
 	user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: InputSignUp.Password}
-	migrations.DB.Create(&user)
+	//migrations.DB.Create(&user)
 	fmt.Printf("user: %v", user)
 
-	sendUserEmail(InputSignUp.Email, "code") //получает агументы из функции "SignUp"
+	//user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: isCorrectPassword()}
+	migrations.DB.Create(&user)
 
 }
 
@@ -77,5 +83,22 @@ func numbergenerate() int64 {
 		fmt.Println(err)
 	}
 	return safeNum.Int64()
+
+}
+func isCorrectPassword(pass []byte) string {
+	//inputpassword := SignUpInput(password)
+	//pass = []byte(inputpassword)
+
+	// Хеширование пароля
+	hashedPassword, err := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(hashedPassword))
+
+	// Сравнение пароля с хэшем
+	err = bcrypt.CompareHashAndPassword(hashedPassword, pass)
+	fmt.Println(err) // если пароли совпадут, то err выдаст <nil>
+	return string(hashedPassword)
 
 }
