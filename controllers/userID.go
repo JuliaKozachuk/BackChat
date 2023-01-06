@@ -13,18 +13,10 @@ import (
 
 type CreateUserInput struct {
 	//ID_user  int    `json:"user_id" binding:"required"`
-	Login    string `json:"login" binding:"required"`
+	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Email    string `json:"email" binding:"required"`
 }
-
-// type AuthorizationUser struct {
-// 	//ID_user           uint   `json:"id_user" binding:"required"`
-// 	Login    string `json:"login" binding:"required"`
-// 	Password string `json:"password"`
-// 	Email    string `json:"email" binding:"required,email"`
-// 	//Verification_code string `json:"email" binding:"required"`
-// }
 
 func GetAllUsers(context *gin.Context) {
 	var usersID []migrations.Users
@@ -51,7 +43,7 @@ func CreateUser(context *gin.Context) {
 		return
 	}
 
-	user := migrations.Users{Login: input.Login, Password: input.Password, Email: input.Email}
+	user := migrations.Users{Username: input.Username, Password: input.Password, Email: input.Email}
 	migrations.DB.Create(&user)
 
 	context.JSON(http.StatusOK, gin.H{"user": user})
@@ -68,15 +60,3 @@ func DeleteUser(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{"users": true})
 }
-
-// func AutorizationUser(context *gin.Context) {
-// 	var inputUser AuthorizationUser
-// 	if err := context.ShouldBindJSON(&inputUser); err != nil {
-// 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	autorise := migrations.Users{Email: inputUser.Email}
-// 	migrations.DB.Create(&autorise)
-
-// }

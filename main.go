@@ -21,6 +21,7 @@ func main() {
 	route := gin.Default()
 
 	migrations.ConnectDB(postgresUrl())
+	//migrations.Missing()
 
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})

@@ -19,10 +19,10 @@ import (
 
 type AuthorizationUser struct {
 	//ID_user           uint   `json:"id_user" binding:"required"`
-	Login    string `json:"login" binding:"required"`
-	Password string `json:"password"binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
-	//Verification_code string `json:"email" binding:"required"`
+	Username          string `json:"username" binding:"required"`
+	Password          string `json:"password"binding:"required"`
+	Email             string `json:"email" binding:"required,email"`
+	Verification_code string `json:"verification_code"`
 }
 
 // создаем нового Юзера
@@ -32,15 +32,22 @@ func SignUpInput(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	numb := numbergenerate()
+	code := strconv.Itoa(int(numb))
+	InputSignUp.Verification_code = code
 
 	fmt.Printf("user: %v", InputSignUp.Email)
-	sendUserEmail(InputSignUp.Email, "code") //получает агументы из функции "SignUp"
+	sendUserEmail(InputSignUp.Email, code) //получает агументы из функции "SignUp"
 
 	pass := []byte(InputSignUp.Password)
 
 	isCorrectPassword(pass)
 	InputSignUp.Password = isCorrectPassword(pass)
-	user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: InputSignUp.Password}
+
+	//numb := numbergenerate()
+	//code := strconv.Itoa(int(numb))
+
+	user := migrations.Users{Username: InputSignUp.Username, Email: InputSignUp.Email, Password: InputSignUp.Password, Verification_code: InputSignUp.Verification_code}
 	//migrations.DB.Create(&user)
 	fmt.Printf("user: %v", user)
 
@@ -56,8 +63,8 @@ func sendUserEmail(email string, code string) {
 	rkey := os.Getenv("RAPID_KEY")
 	rhost := os.Getenv("RAPID_HOST")
 
-	numb := numbergenerate()
-	code = strconv.Itoa(int(numb))
+	// numb := numbergenerate()
+	// code = strconv.Itoa(int(numb))
 
 	payload := strings.NewReader("{\r\"personalizations\": [\r{\r\"to\": [\r{\r\"email\": \"" + email + "\"\r}\r],\r\"subject\": \"password:" + code + "\"\r}\r],\r\"from\": {\r\"email\": \"uliakozacuk649@gmail.com\"\r},\r\"content\": [\r{\r\"type\": \"text/plain\",\r\"value\": \"password:" + code + "\"\r}\r]\r}")
 
@@ -86,8 +93,6 @@ func numbergenerate() int64 {
 
 }
 func isCorrectPassword(pass []byte) string {
-	//inputpassword := SignUpInput(password)
-	//pass = []byte(inputpassword)
 
 	// Хеширование пароля
 	hashedPassword, err := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
