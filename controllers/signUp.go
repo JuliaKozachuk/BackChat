@@ -43,6 +43,7 @@ func SignUpInput(context *gin.Context) {
 
 	isCorrectPassword(pass)
 	InputSignUp.Password = isCorrectPassword(pass)
+	//InputSignUp.Verification_code= isCorrectVerificode(code)
 
 	//numb := numbergenerate()
 	//code := strconv.Itoa(int(numb))
@@ -53,6 +54,32 @@ func SignUpInput(context *gin.Context) {
 
 	//user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: isCorrectPassword()}
 	migrations.DB.Create(&user)
+
+}
+func Login(c *gin.Context) {
+
+	var input AuthorizationUser
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	u := migrations.Users{}
+
+	u.Username = input.Username
+	u.Password = input.Password
+	u.Email = input.Email
+	u.Verification_code = input.Verification_code
+
+	token, err := migrations.LoginCheck(u.Username, u.Password)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
 
 }
 

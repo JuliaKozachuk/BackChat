@@ -26,15 +26,24 @@ func main() {
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
 	})
+
 	route.GET("/userID", controllers.GetAllUsers)
-	route.GET("/users:id", controllers.GetUser)
+	//route.GET("/users:id", controllers.GetUser)
 	route.POST("/user", controllers.CreateUser)
 
 	route.POST("/signup", controllers.SignUpInput)
 
 	route.DELETE("/del", controllers.DeleteUser)
+	route.POST("/login", controllers.Login)
 
-	route.Run()
+	err := route.Run(":9888")
+	if err != nil {
+		panic("[Error] failed to start Gin server due to: " + err.Error())
+		return
+	}
+
+	// route.Run()
+
 }
 
 // подключение к postresql
@@ -43,12 +52,12 @@ func postgresUrl() string {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	host := os.Getenv("DB_HOST")
-	port := os.Getenv("DB_PORT")
-	user := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-	password := os.Getenv("DB_PASSWORD")
-	sslmode := os.Getenv("DB_SSLMODE")
+	host := os.Getenv("POSTGRES_HOST")
+	port := os.Getenv("POSTGRES_PORT")
+	user := os.Getenv("POSTGRES_USER")
+	dbname := os.Getenv("POSTGRES_DB")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	sslmode := os.Getenv("POSTRES_SSLMODE")
 
 	postgres_data := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s ", host, port, user, dbname, password, sslmode)
 

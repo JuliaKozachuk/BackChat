@@ -1,13 +1,42 @@
 version: '3.8'
 services:
-  cache:
+  redis:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
-    command: redis-server --requirepass qwerty
+      - '6380:6379'
+    command: redis-server 
     volumes: 
       - cache:/data
+  postgres:
+    image: postgres:14.1
+    environment:
+      POSTGRES_DB: 'back_chat'
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - "5432:5432"
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data/'
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+
+    ports:
+      - "${PGADMIN_PORT:-9090}:80"
+    restart: unless-stopped
+
+
+
+
+
 volumes:
   cache:
     driver: local
+  pgdata:
+  pgadmin:
