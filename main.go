@@ -8,12 +8,12 @@ import (
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
 
-	_ "github.com/JuliaKozachuk/BackChat/controllers" // swagger embed files
+	_ "github.com/JuliaKozachuk/BackChat/docs"
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/redisconnect"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/swaggo/gin-swagger" // gin-swagger middleware
+	"github.com/swaggo/gin-swagger"
 )
 
 //	@title			Swagger Example API
@@ -23,23 +23,25 @@ import (
 //	@host		localhost:9888
 //	@BasePath	/
 
-//	@securityDefinitions.apikey	ApiKeyAuth
-//	@in							header
-//	@name						Authorization
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 
 func main() {
 
 	redisconnect.ExampleClient()
 
 	route := gin.Default()
+	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	migrations.ConnectDB(postgresUrl())
 	//migrations.Missing()
 
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
+
 	})
-	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	route.GET("/userID", controllers.GetAllUsers)
 	//route.GET("/users:id", controllers.GetUser)
 	route.POST("/user", controllers.CreateUser)
