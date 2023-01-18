@@ -38,3 +38,6 @@ func ConnectDB(postgres_data string) {
 	//fmt.Println(user.Email)
 
 }
+func GetDB() *gorm.DB {
+	return DB
+}

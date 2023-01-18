@@ -5,24 +5,16 @@ import (
 
 	//"fmt"
 
-	"html"
+	//"html"
 
 	//"BackChat/utils/token"
-	"github.com/JuliaKozachuk/BackChat/token"
 
-	"strings"
+	token "github.com/JuliaKozachuk/BackChat/utils"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
-
-// var DB *gorm.DB
-type Token struct {
-	UserId uint
-	jwt.StandardClaims
-}
 
 type Users struct {
 	gorm.Model
@@ -33,6 +25,15 @@ type Users struct {
 	Verification_code string `json:"verification_code"`
 }
 
+func (u *Users) SaveUser() (*Users, error) {
+
+	var err error
+	err = DB.Create(&u).Error
+	if err != nil {
+		return &Users{}, err
+	}
+	return u, nil
+}
 func VerifyPassword(password, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
@@ -62,31 +63,5 @@ func LoginCheck(username string, password string) (string, error) {
 	}
 
 	return token, nil
-
-}
-
-func (u *Users) SaveUser() (*Users, error) {
-
-	var err error
-	err = DB.Create(&u).Error
-	if err != nil {
-		return &Users{}, err
-	}
-	return u, nil
-}
-
-func (u *Users) BeforeSave() error {
-
-	//turn password into hash
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	u.Password = string(hashedPassword)
-
-	//remove spaces in username
-	u.Username = html.EscapeString(strings.TrimSpace(u.Username))
-
-	return nil
 
 }

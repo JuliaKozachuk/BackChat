@@ -25,8 +25,16 @@ type AuthorizationUser struct {
 	Verification_code string `json:"verification_code"`
 }
 
-// создаем нового Юзера
-func SignUpInput(context *gin.Context) {
+//	@Summary		SignUpInput
+//	@Tags			auth
+//	@Description	create account
+//@ID create-account
+//@Accept json
+//@Produce json
+//@Param input body AutorizationUser true "account info"
+//@Router /auth/signup [post]
+
+func SignUpInput(context *gin.Context) { // создаем нового Юзера
 	var InputSignUp AuthorizationUser
 	if err := context.ShouldBindJSON(&InputSignUp); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -41,8 +49,8 @@ func SignUpInput(context *gin.Context) {
 
 	pass := []byte(InputSignUp.Password)
 
-	isCorrectPassword(pass)
-	InputSignUp.Password = isCorrectPassword(pass)
+	IsCorrectPassword(pass)
+	InputSignUp.Password = IsCorrectPassword(pass)
 	//InputSignUp.Verification_code= isCorrectVerificode(code)
 
 	//numb := numbergenerate()
@@ -54,32 +62,6 @@ func SignUpInput(context *gin.Context) {
 
 	//user := migrations.Users{Login: InputSignUp.Login, Email: InputSignUp.Email, Password: isCorrectPassword()}
 	migrations.DB.Create(&user)
-
-}
-func Login(c *gin.Context) {
-
-	var input AuthorizationUser
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	u := migrations.Users{}
-
-	u.Username = input.Username
-	u.Password = input.Password
-	u.Email = input.Email
-	u.Verification_code = input.Verification_code
-
-	token, err := migrations.LoginCheck(u.Username, u.Password)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"token": token})
 
 }
 
@@ -119,7 +101,7 @@ func numbergenerate() int64 {
 	return safeNum.Int64()
 
 }
-func isCorrectPassword(pass []byte) string {
+func IsCorrectPassword(pass []byte) string {
 
 	// Хеширование пароля
 	hashedPassword, err := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)

@@ -8,11 +8,24 @@ import (
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
 
+	_ "github.com/JuliaKozachuk/BackChat/controllers" // swagger embed files
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/redisconnect"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
+
+//	@title			Swagger Example API
+//	@version		1.0
+//	@description	This is API Server for chat
+
+//	@host		localhost:9888
+//	@BasePath	/
+
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						Authorization
 
 func main() {
 
@@ -26,7 +39,7 @@ func main() {
 	route.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
 	})
-
+	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	route.GET("/userID", controllers.GetAllUsers)
 	//route.GET("/users:id", controllers.GetUser)
 	route.POST("/user", controllers.CreateUser)
@@ -34,6 +47,7 @@ func main() {
 	route.POST("/signup", controllers.SignUpInput)
 
 	route.DELETE("/del", controllers.DeleteUser)
+	route.POST("/registrate", controllers.Register)
 	route.POST("/login", controllers.Login)
 
 	err := route.Run(":9888")
