@@ -40,4 +40,9 @@ func ConnectDB(postgres_data string) {
 }
 func GetDB() *gorm.DB {
 	return DB
+
+}
+
+func Alex() string {
+	return "hellow ales"
 }

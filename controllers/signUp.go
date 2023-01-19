@@ -25,15 +25,6 @@ type AuthorizationUser struct {
 	Verification_code string `json:"verification_code"`
 }
 
-//	@Summary		SignUpInput
-//	@Tags			auth
-//	@Description	create account
-//@ID create-account
-//@Accept json
-//@Produce json
-//@Param input body AutorizationUser true "account info"
-//@Router /auth/signup [post]
-
 func SignUpInput(context *gin.Context) { // создаем нового Юзера
 	var InputSignUp AuthorizationUser
 	if err := context.ShouldBindJSON(&InputSignUp); err != nil {

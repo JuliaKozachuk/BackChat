@@ -8,37 +8,53 @@ import (
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
 
-	_ "github.com/JuliaKozachuk/BackChat/docs"
+	docs "github.com/JuliaKozachuk/BackChat/docs"
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/redisconnect"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/swaggo/gin-swagger"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-//	@title			Swagger Example API
-//	@version		1.0
-//	@description	This is API Server for chat
+// @BasePath /api/v1
 
-//	@host		localhost:9888
-//	@BasePath	/
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /example/helloworld [get]
 
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in							header
-// @name						Authorization
+func Helloworld(g *gin.Context) {
+	g.JSON(http.StatusOK, "helloworld")
+}
 
 func main() {
 
 	redisconnect.ExampleClient()
 
 	route := gin.Default()
-	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	v1 := route.Group("/api/v1")
+	{
+		eg := v1.Group("/example")
+		{
+			eg.GET("/helloworld", Helloworld)
+			eg.GET("/userID", controllers.GetAllUsers)
+
+		}
+	}
 
 	migrations.ConnectDB(postgresUrl())
 	//migrations.Missing()
 
 	route.GET("/", func(context *gin.Context) {
-		context.JSON(http.StatusOK, gin.H{"message": "Успешное соединение"})
+		context.JSON(http.StatusOK, gin.H{"message": migrations.Alex()})
 
 	})
 
@@ -52,6 +68,7 @@ func main() {
 	route.POST("/registrate", controllers.Register)
 	route.POST("/login", controllers.Login)
 
+	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	err := route.Run(":9888")
 	if err != nil {
 		panic("[Error] failed to start Gin server due to: " + err.Error())

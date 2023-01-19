@@ -12,7 +12,7 @@ import (
 )
 
 type CreateUserInput struct {
-	//ID_user  int    `json:"user_id" binding:"required"`
+	ID_user  int    `json:"user_id" binding:"required"`
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Email    string `json:"email" binding:"required"`
@@ -60,3 +60,11 @@ func DeleteUser(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{"users": true})
 }
+
+// $HOME
+// /home/julia
+// ~/
+
+// /home/julia/projects
+
+// export GOPATH=$HOME/projects:/usr/bin/go
