@@ -5,5 +5,5 @@ import (
 )
 
 func Redis() {
-	redisconnect.ExampleClient()
+	redisconnect.Setup()
 }
