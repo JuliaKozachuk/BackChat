@@ -41,7 +41,7 @@ func Router() {
 		eg := v1.Group("/example")
 		{
 			eg.GET("/helloworld", Helloworld)
-			eg.GET("/userID", controllers.GetAllUsers)
+			eg.POST("/signup", controllers.SignUpInput)
 
 		}
 	}
@@ -53,16 +53,6 @@ func Router() {
 		context.JSON(http.StatusOK, gin.H{"message": migrations.Alex()})
 
 	})
-
-	route.GET("/userID", controllers.GetAllUsers)
-	//route.GET("/users:id", controllers.GetUser)
-	route.POST("/user", controllers.CreateUser)
-
-	route.POST("/signup", controllers.SignUpInput)
-
-	route.DELETE("/del", controllers.DeleteUser)
-	route.POST("/registrate", controllers.Register)
-	route.POST("/login", controllers.Login)
 
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	err := route.Run(":9888")
