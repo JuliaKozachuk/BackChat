@@ -16,26 +16,109 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/example/helloworld": {
+        "/example/signup": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "writes the user to the database",
+                "parameters": [
+                    {
+                        "description": "user",
+                        "name": "SignUpInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AuthorizationUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/migrations.Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/example/userID": {
             "get": {
-                "description": "do ping",
+                "description": "getting all users",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "example"
-                ],
-                "summary": "ping example",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/migrations.Users"
+                            }
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.AuthorizationUser": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "description": "ID_user           uint   ` + "`" + `json:\"id_user\" binding:\"required\"` + "`" + `",
+                    "type": "string"
+                },
+                "verification_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "migrations.Users": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "id_user": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "username addin": {
+                    "type": "string"
+                },
+                "verification_code": {
+                    "type": "string"
                 }
             }
         }
@@ -44,12 +127,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
+	Version:          "1.0",
+	Host:             "localhost:9888",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "BACKCHAT Api",
+	Description:      "This is a  server BackChat.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	_ "github.com/JuliaKozachuk/BackChat/docs"
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -25,6 +26,12 @@ type AuthorizationUser struct {
 	Verification_code string `json:"verification_code"`
 }
 
+// @Summary writes the user to the database
+// @Produce json
+// @Param SignUpInput body AuthorizationUser true "user"
+// @Success 200  {object} migrations.Users
+// @Router /example/signup [post]
+// // @Security ApiKeyAuth
 func SignUpInput(context *gin.Context) { // создаем нового Юзера
 	var InputSignUp AuthorizationUser
 	if err := context.ShouldBindJSON(&InputSignUp); err != nil {
@@ -59,7 +66,7 @@ func SignUpInput(context *gin.Context) { // создаем нового Юзер
 // отправляет код подтверждения для созданного юзера
 func sendUserEmail(email string, code string) {
 
-	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
+	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/alerts/%7Balert_id%7D"
 	rkey := os.Getenv("RAPID_KEY")
 	rhost := os.Getenv("RAPID_HOST")
 

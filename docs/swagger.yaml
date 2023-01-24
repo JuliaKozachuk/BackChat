@@ -1,20 +1,78 @@
 basePath: /api/v1
+definitions:
+  controllers.AuthorizationUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        description: ID_user           uint   `json:"id_user" binding:"required"`
+        type: string
+      verification_code:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  migrations.Users:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      id_user:
+        type: integer
+      password:
+        type: string
+      updated_at:
+        type: string
+      username addin:
+        type: string
+      verification_code:
+        type: string
+    type: object
+host: localhost:9888
 info:
   contact: {}
+  description: This is a  server BackChat.
+  title: BACKCHAT Api
+  version: "1.0"
 paths:
-  /example/helloworld:
-    get:
-      consumes:
-      - application/json
-      description: do ping
+  /example/signup:
+    post:
+      parameters:
+      - description: user
+        in: body
+        name: SignUpInput
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AuthorizationUser'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: string
-      summary: ping example
-      tags:
-      - example
+            $ref: '#/definitions/migrations.Users'
+      summary: writes the user to the database
+  /example/userID:
+    get:
+      consumes:
+      - application/json
+      description: getting all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/migrations.Users'
+            type: array
 swagger: "2.0"
