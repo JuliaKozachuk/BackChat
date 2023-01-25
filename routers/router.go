@@ -43,6 +43,9 @@ func InitRouter() {
 
 	//route.POST("/signup", controllers.SignUpInput)
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	route.POST("/getaut", controllers.GetAuth)
+	route.POST("/login", controllers.Login)
+
 	//route.POST("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	err := route.Run(":9888")

@@ -5,16 +5,15 @@ definitions:
       email:
         type: string
       password:
-        type: string
-      username:
-        description: ID_user           uint   `json:"id_user" binding:"required"`
+        description: |-
+          ID_user           uint   `json:"id_user" binding:"required"`
+          Username          string `json:"username" binding:"required,email"`
         type: string
       verification_code:
         type: string
     required:
     - email
     - password
-    - username
     type: object
   migrations.Users:
     properties:

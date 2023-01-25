@@ -3,6 +3,7 @@ package controllers
 import (
 
 	//"net/http"
+
 	"crypto/rand"
 	"fmt"
 	"io/ioutil"
@@ -20,7 +21,7 @@ import (
 
 type AuthorizationUser struct {
 	//ID_user           uint   `json:"id_user" binding:"required"`
-	Username          string `json:"username" binding:"required"`
+	Username          string `json:"username" binding:"required,email"`
 	Password          string `json:"password"binding:"required"`
 	Email             string `json:"email" binding:"required,email"`
 	Verification_code string `json:"verification_code"`
@@ -32,6 +33,7 @@ type AuthorizationUser struct {
 // @Success 200  {object} migrations.Users
 // @Router /example/signup [post]
 // // @Security ApiKeyAuth
+
 func SignUpInput(context *gin.Context) { // создаем нового Юзера
 	var InputSignUp AuthorizationUser
 	if err := context.ShouldBindJSON(&InputSignUp); err != nil {

@@ -5,9 +5,13 @@ import (
 
 	//"fmt"
 
-	//"html"
+	"html"
 
+	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -21,49 +25,48 @@ type Model struct {
 type Users struct {
 	Model
 	ID_user           uint   `json:"id_user" gorm:"primary_key"`
-	Username          string `json:"username addin"gorm:"unique"`
-	Password          string `json:"password"`
-	Email             string `json:"email" gorm:"unique"`
+	Username          string `json:"username" addin"gorm:"unique"`
+	Password          string `gorm:"size:255;not null;" json:"-"`
+	Email             string `gorm:"size:255;not null;unique" json:"email"`
 	Verification_code string `json:"verification_code"`
 }
 
-// func (u *Users) SaveUser() (*Users, error) {
+// добавляет в базу нового пользователя
+func (u *Users) SaveUser() (*Users, error) {
 
-// 	var err error
-// 	err = DB.Create(&u).Error
-// 	if err != nil {
-// 		return &Users{}, err
-// 	}
-// 	return u, nil
-// }
-// func VerifyPassword(password, hashedPassword string) error {
-// 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-// }
+	var err error
+	err = DB.Create(&u).Error
+	if err != nil {
+		return &Users{}, err
+	}
+	return u, nil
+}
 
-// func LoginCheck(username string, password string) (string, error) {
+// хэширует пароль, перед сохранением, предварительно обрезав все возможные пробелы
+func (user *Users) BeforeSave(*gorm.DB) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	nameuser := user.Username
+	if err != nil {
+		return err
+	}
+	user.Password = string(passwordHash)
+	user.Email = html.EscapeString(strings.TrimSpace(user.Email))
+	user.Username = nameuser
+	//user.Username = string(user.Username)
+	return nil
+}
 
-// 	var err error
+// генерируется хеш для предоставленного открытого пароля и сравнивается с хэшем пароля пользователя. Если они не совпадают, возвращается ошибка.
+func (user *Users) ValidatePassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+}
 
-// 	u := Users{}
-
-// 	err = DB.Model(Users{}).Where("username = ?", username).Take(&u).Error
-
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	err = VerifyPassword(password, u.Password)
-
-// 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-// 		return "", err
-// 	}
-
-// 	token, err := token.GenerateToken(u.ID)
-
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	return token, nil
-
-// }
+// принимает  email пользователя и запрашивает базу данных, чтобы найти соответствующего пользователя.
+func FindUserByUsername(email string) (Users, error) {
+	var user Users
+	err := DB.Where("email=?", email).Find(&user).Error
+	if err != nil {
+		return Users{}, err
+	}
+	return user, nil
+}

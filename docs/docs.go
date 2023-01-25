@@ -71,18 +71,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "password",
-                "username"
+                "password"
             ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "description": "ID_user           uint   ` + "`" + `json:\"id_user\" binding:\"required\"` + "`" + `",
+                    "description": "ID_user           uint   ` + "`" + `json:\"id_user\" binding:\"required\"` + "`" + `\nUsername          string ` + "`" + `json:\"username\" binding:\"required,email\"` + "`" + `",
                     "type": "string"
                 },
                 "verification_code": {
