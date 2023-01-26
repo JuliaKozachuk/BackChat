@@ -25,10 +25,10 @@ type Model struct {
 type Users struct {
 	Model
 	ID_user           uint   `json:"id_user" gorm:"primary_key"`
-	Username          string `json:"username" addin"gorm:"unique"`
-	Password          string `gorm:"size:255;not null;" json:"-"`
+	Username          string `gorm: not null; unique" json:"username"`
+	Password          string `gorm:"size:255;not null;" json:"-"` //Опривязка JSON для Password поля — -. Это гарантирует, что пароль пользователя не будет возвращен в ответе JSON.
 	Email             string `gorm:"size:255;not null;unique" json:"email"`
-	Verification_code string `json:"verification_code"`
+	Verification_code string `json:"-"`
 }
 
 // добавляет в базу нового пользователя
@@ -45,13 +45,13 @@ func (u *Users) SaveUser() (*Users, error) {
 // хэширует пароль, перед сохранением, предварительно обрезав все возможные пробелы
 func (user *Users) BeforeSave(*gorm.DB) error {
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	nameuser := user.Username
+	//nameuser,err := user.Username
 	if err != nil {
 		return err
 	}
 	user.Password = string(passwordHash)
 	user.Email = html.EscapeString(strings.TrimSpace(user.Email))
-	user.Username = nameuser
+	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
 	//user.Username = string(user.Username)
 	return nil
 }
@@ -62,10 +62,14 @@ func (user *Users) ValidatePassword(password string) error {
 }
 
 // принимает  email пользователя и запрашивает базу данных, чтобы найти соответствующего пользователя.
-func FindUserByUsername(email string) (Users, error) {
+func FindUserByUsername(email, verification_code string) (Users, error) {
 	var user Users
 	err := DB.Where("email=?", email).Find(&user).Error
 	if err != nil {
+		return Users{}, err
+	}
+	ver := DB.Where("verification_code=?", verification_code).Find(&user).Error
+	if ver != nil {
 		return Users{}, err
 	}
 	return user, nil

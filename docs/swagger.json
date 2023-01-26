@@ -2,36 +2,46 @@
     "swagger": "2.0",
     "info": {
         "description": "This is a  server BackChat.",
-        "title": "BACKCHAT Api",
+        "title": "BackChat Api",
         "contact": {},
         "version": "1.0"
     },
     "host": "localhost:9888",
     "basePath": "/api/v1",
     "paths": {
-        "/example/signup": {
+        "/example/getauth": {
             "post": {
+                "description": "register a new user",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Сreate a new account"
                 ],
                 "summary": "writes the user to the database",
                 "parameters": [
                     {
                         "description": "user",
-                        "name": "SignUpInput",
+                        "name": "get",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.AuthorizationUser"
+                            "$ref": "#/definitions/controllers.GetAut"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/migrations.Users"
+                            "$ref": "#/definitions/controllers.GetAut"
                         }
+                    },
+                    "400": {
+                        "description": "email is not unique"
+                    },
+                    "500": {
+                        "description": "user registration failed"
                     }
                 }
             }
@@ -60,7 +70,7 @@
         }
     },
     "definitions": {
-        "controllers.AuthorizationUser": {
+        "controllers.GetAut": {
             "type": "object",
             "required": [
                 "email",
@@ -71,10 +81,6 @@
                     "type": "string"
                 },
                 "password": {
-                    "description": "ID_user           uint   `json:\"id_user\" binding:\"required\"`\nUsername          string `json:\"username\" binding:\"required,email\"`",
-                    "type": "string"
-                },
-                "verification_code": {
                     "type": "string"
                 }
             }
@@ -97,19 +103,20 @@
                 "id_user": {
                     "type": "integer"
                 },
-                "password": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 },
-                "username addin": {
-                    "type": "string"
-                },
-                "verification_code": {
+                "username": {
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Autorization",
+            "in": "header"
         }
     }
 }

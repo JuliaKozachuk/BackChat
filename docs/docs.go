@@ -16,29 +16,39 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/example/signup": {
+        "/example/getauth": {
             "post": {
+                "description": "register a new user",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Сreate a new account"
                 ],
                 "summary": "writes the user to the database",
                 "parameters": [
                     {
                         "description": "user",
-                        "name": "SignUpInput",
+                        "name": "get",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.AuthorizationUser"
+                            "$ref": "#/definitions/controllers.GetAut"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/migrations.Users"
+                            "$ref": "#/definitions/controllers.GetAut"
                         }
+                    },
+                    "400": {
+                        "description": "email is not unique"
+                    },
+                    "500": {
+                        "description": "user registration failed"
                     }
                 }
             }
@@ -67,7 +77,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.AuthorizationUser": {
+        "controllers.GetAut": {
             "type": "object",
             "required": [
                 "email",
@@ -78,10 +88,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
-                    "description": "ID_user           uint   ` + "`" + `json:\"id_user\" binding:\"required\"` + "`" + `\nUsername          string ` + "`" + `json:\"username\" binding:\"required,email\"` + "`" + `",
-                    "type": "string"
-                },
-                "verification_code": {
                     "type": "string"
                 }
             }
@@ -104,19 +110,20 @@ const docTemplate = `{
                 "id_user": {
                     "type": "integer"
                 },
-                "password": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 },
-                "username addin": {
-                    "type": "string"
-                },
-                "verification_code": {
+                "username": {
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Autorization",
+            "in": "header"
         }
     }
 }`
@@ -127,7 +134,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:9888",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "BACKCHAT Api",
+	Title:            "BackChat Api",
 	Description:      "This is a  server BackChat.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

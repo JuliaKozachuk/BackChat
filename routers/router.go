@@ -29,7 +29,7 @@ func InitRouter() {
 		eg := v1.Group("/example")
 		{
 			eg.GET("/helloworld", Helloworld)
-			eg.POST("/signup", controllers.SignUpInput)
+			eg.POST("/getauth", controllers.GetAuth)
 			eg.GET("/userID", controllers.GetAllUsers)
 		}
 

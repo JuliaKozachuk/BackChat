@@ -1,15 +1,10 @@
 basePath: /api/v1
 definitions:
-  controllers.AuthorizationUser:
+  controllers.GetAut:
     properties:
       email:
         type: string
       password:
-        description: |-
-          ID_user           uint   `json:"id_user" binding:"required"`
-          Username          string `json:"username" binding:"required,email"`
-        type: string
-      verification_code:
         type: string
     required:
     - email
@@ -27,39 +22,42 @@ definitions:
         type: integer
       id_user:
         type: integer
-      password:
-        type: string
       updated_at:
         type: string
-      username addin:
-        type: string
-      verification_code:
+      username:
         type: string
     type: object
 host: localhost:9888
 info:
   contact: {}
   description: This is a  server BackChat.
-  title: BACKCHAT Api
+  title: BackChat Api
   version: "1.0"
 paths:
-  /example/signup:
+  /example/getauth:
     post:
+      description: register a new user
       parameters:
       - description: user
         in: body
-        name: SignUpInput
+        name: get
         required: true
         schema:
-          $ref: '#/definitions/controllers.AuthorizationUser'
+          $ref: '#/definitions/controllers.GetAut'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
-            $ref: '#/definitions/migrations.Users'
+            $ref: '#/definitions/controllers.GetAut'
+        "400":
+          description: email is not unique
+        "500":
+          description: user registration failed
       summary: writes the user to the database
+      tags:
+      - Сreate a new account
   /example/userID:
     get:
       consumes:
@@ -74,4 +72,9 @@ paths:
             items:
               $ref: '#/definitions/migrations.Users'
             type: array
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Autorization
+    type: apiKey
 swagger: "2.0"
