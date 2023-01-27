@@ -11,13 +11,13 @@ import (
 	//"github.com/go-redis/redis/v8/internal/util"
 )
 
-type GetAut struct {
+type SingUpinput struct {
 	Username          string `swaggerignore:"true" json:"username" `
 	Email             string `json:"email" binding:"required"`
 	Password          string `json:"password" binding:"required"`
 	Verification_code string `swaggerignore:"true" json:"verification_code"` //swaggerignore, чтобы исключить поле из зоны видимости сваггера
 }
-type LoginUp struct {
+type SingIninput struct {
 	Email             string `json:"email" binding:"required"`
 	Password          string `json:"password" binding:"required"`
 	Verification_code string `json:"verification_code"`
@@ -26,16 +26,17 @@ type LoginUp struct {
 // @Summary writes the user to the database
 // @Description  register a new user
 // @Tags         Сreate a new account
+// @Accept json
 // @Produce json
-// @Param get body GetAut true "user"
-// @Success 201 {object} GetAut
+// @Param get body SingUpinput true "user"
+// @Success 201 {object} SingUpinput
 // @Failure      500 "user registration failed"
 // @Failure      400 "email is not unique"
-// @Router /example/getauth [post]
+// @Router /example/SingUp [post]
 // // @Security ApiKeyAuth
 // создает нового пользователя и возвращает сведения о сохраненном пользователе
-func GetAuth(context *gin.Context) {
-	var get GetAut
+func SingUp(context *gin.Context) {
+	var get SingUpinput
 
 	if err := context.ShouldBindJSON(&get); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -63,8 +64,18 @@ func GetAuth(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, gin.H{"user": savedUser})
 }
-func Login(context *gin.Context) {
-	var input LoginUp
+
+// @Summary User login
+// @Description  User login to the system by mail, password, verification code
+// @ID login
+// @Tags         auth
+// // @Accept json
+// @Produce json
+// @Param input body SingIninput true " login user"
+// @Success 200 {string} string "jwt"
+// @Router /example/SingIn [post]
+func SingIn(context *gin.Context) {
+	var input SingIninput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

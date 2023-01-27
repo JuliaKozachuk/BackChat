@@ -1,6 +1,18 @@
 basePath: /api/v1
 definitions:
-  controllers.GetAut:
+  controllers.SingIninput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      verification_code:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controllers.SingUpinput:
     properties:
       email:
         type: string
@@ -34,8 +46,31 @@ info:
   title: BackChat Api
   version: "1.0"
 paths:
-  /example/getauth:
+  /example/SingIn:
     post:
+      description: User login to the system by mail, password, verification code
+      operationId: login
+      parameters:
+      - description: ' login user'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.SingIninput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: jwt
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - auth
+  /example/SingUp:
+    post:
+      consumes:
+      - application/json
       description: register a new user
       parameters:
       - description: user
@@ -43,14 +78,14 @@ paths:
         name: get
         required: true
         schema:
-          $ref: '#/definitions/controllers.GetAut'
+          $ref: '#/definitions/controllers.SingUpinput'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.GetAut'
+            $ref: '#/definitions/controllers.SingUpinput'
         "400":
           description: email is not unique
         "500":

@@ -29,8 +29,8 @@ func InitRouter() {
 		eg := v1.Group("/example")
 		{
 			eg.GET("/helloworld", Helloworld)
-			eg.POST("/getauth", controllers.GetAuth)
-			eg.GET("/userID", controllers.GetAllUsers)
+			eg.POST("/SingUp", controllers.SingUp)
+			eg.POST("/SingIn", controllers.GetAllUsers)
 		}
 
 	}
@@ -43,8 +43,8 @@ func InitRouter() {
 
 	//route.POST("/signup", controllers.SignUpInput)
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	route.POST("/getaut", controllers.GetAuth)
-	route.POST("/login", controllers.Login)
+	//route.POST("/getaut", controllers.GetAuth)
+	route.POST("/login", controllers.SingIn)
 
 	//route.POST("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

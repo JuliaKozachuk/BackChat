@@ -16,9 +16,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/example/getauth": {
+        "/example/SingIn": {
+            "post": {
+                "description": "User login to the system by mail, password, verification code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": " login user",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.SingIninput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "jwt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/example/SingUp": {
             "post": {
                 "description": "register a new user",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -33,7 +68,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetAut"
+                            "$ref": "#/definitions/controllers.SingUpinput"
                         }
                     }
                 ],
@@ -41,7 +76,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.GetAut"
+                            "$ref": "#/definitions/controllers.SingUpinput"
                         }
                     },
                     "400": {
@@ -77,7 +112,25 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.GetAut": {
+        "controllers.SingIninput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "verification_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.SingUpinput": {
             "type": "object",
             "required": [
                 "email",
