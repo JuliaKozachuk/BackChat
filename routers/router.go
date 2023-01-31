@@ -8,7 +8,9 @@ import (
 
 	"github.com/JuliaKozachuk/BackChat/controllers"
 	"github.com/JuliaKozachuk/BackChat/docs"
+	_ "github.com/JuliaKozachuk/BackChat/docs"
 	"github.com/JuliaKozachuk/BackChat/migrations"
+	v1 "github.com/JuliaKozachuk/BackChat/routers/api/v1"
 	"github.com/joho/godotenv"
 
 	//	_ "github.com/JuliaKozachuk/BackChat/docs"
@@ -17,6 +19,14 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /example/helloworld [get]
 func Helloworld(g *gin.Context) {
 	g.JSON(http.StatusOK, "helloworld")
 }
@@ -24,13 +34,15 @@ func InitRouter() {
 	route := gin.Default()
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	v1 := route.Group("/api/v1")
+	apiv1 := route.Group("/api/v1")
+
 	{
-		eg := v1.Group("/example")
+		eg := apiv1.Group("/example")
 		{
 			eg.GET("/helloworld", Helloworld)
-			eg.POST("/SingUp", controllers.SingUp)
-			eg.POST("/SingIn", controllers.GetAllUsers)
+			eg.POST("/SignUp", v1.SignUp)
+			eg.POST("/SingIn", v1.SingIn)
+			eg.GET("/userID", controllers.GetAllUsers)
 		}
 
 	}
@@ -44,7 +56,8 @@ func InitRouter() {
 	//route.POST("/signup", controllers.SignUpInput)
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	//route.POST("/getaut", controllers.GetAuth)
-	route.POST("/login", controllers.SingIn)
+	//route.POST("/login", controllers.SingIn)
+	//route.POST("/signup", controllers.SignUp)
 
 	//route.POST("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

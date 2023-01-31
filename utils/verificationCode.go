@@ -1,4 +1,4 @@
-package controllers
+package utils
 
 import (
 
@@ -16,7 +16,7 @@ import (
 )
 
 // отправляет код подтверждения для созданного юзера
-func sendUserEmail(email string, code string) {
+func SendUserEmail(email string, code string) {
 
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/alerts/%7Balert_id%7D"
 	rkey := os.Getenv("RAPID_KEY")
@@ -43,7 +43,7 @@ func sendUserEmail(email string, code string) {
 }
 
 // генерация рандомных чисел для кода
-func numbergenerate() int64 {
+func Numbergenerate() int64 {
 	safeNum, err := rand.Int(rand.Reader, big.NewInt(80000000000000))
 	if err != nil {
 		fmt.Println(err)

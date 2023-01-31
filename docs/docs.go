@@ -16,39 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/example/SingIn": {
-            "post": {
-                "description": "User login to the system by mail, password, verification code",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "User login",
-                "operationId": "login",
-                "parameters": [
-                    {
-                        "description": " login user",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.SingIninput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "jwt",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/example/SingUp": {
+        "/example/SignUp": {
             "post": {
                 "description": "register a new user",
                 "consumes": [
@@ -68,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.SingUpinput"
+                            "$ref": "#/definitions/controllers.SignUpInput"
                         }
                     }
                 ],
@@ -76,7 +44,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.SingUpinput"
+                            "$ref": "#/definitions/controllers.SignUpInput"
                         }
                     },
                     "400": {
@@ -84,6 +52,61 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "user registration failed"
+                    }
+                }
+            }
+        },
+        "/example/SingIn": {
+            "post": {
+                "description": "User login to the system by mail, password, verification code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": " login user",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.SignInInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "jwt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/example/helloworld": {
+            "get": {
+                "description": "do ping",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "example"
+                ],
+                "summary": "ping example",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -112,7 +135,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.SingIninput": {
+        "controllers.SignInInput": {
             "type": "object",
             "required": [
                 "email",
@@ -130,7 +153,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.SingUpinput": {
+        "controllers.SignUpInput": {
             "type": "object",
             "required": [
                 "email",
@@ -138,6 +161,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "email": {
+                    "description": "Username          string ` + "`" + `swaggerignore:\"true\" json:\"username\" ` + "`" + `",
                     "type": "string"
                 },
                 "password": {
@@ -170,13 +194,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Autorization",
-            "in": "header"
         }
     }
 }`

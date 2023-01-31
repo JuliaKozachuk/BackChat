@@ -12,18 +12,18 @@ import (
 // @host localhost:9888
 // @BasePath /api/v1
 
-//@SecurityDefinitions.apikey ApiKeyAuth
-//@in header
-//@name Autorization
+////@SecurityDefinitions.apikey ApiKeyAuth
+////@in header
+////@name Autorization
 
 func main() {
 
 	redisconnect.Setup()
 
 	routers.InitRouter()
-	// if err != nil {
-	// 	panic("[Error] failed to start Gin server due to: " + err.Error())
-
-	// }
-
+	//  if err != nil {
+	//  	panic("[Error] failed to start Gin server due to: " + err.Error())
+	//  }
+	// 	d := controllers.Logingenerate(150)
+	// 	fmt.Println(d)
 }
