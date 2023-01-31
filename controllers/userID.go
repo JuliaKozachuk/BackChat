@@ -18,6 +18,11 @@ type CreateUserInput struct {
 	Email    string `json:"email" binding:"required"`
 }
 
+// @description getting all users
+// @Produce json
+// @Accept json
+// @Success 200  {object} []migrations.Users
+// @Router /example/userID [get]
 func GetAllUsers(context *gin.Context) {
 	var usersID []migrations.Users
 

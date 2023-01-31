@@ -1,7 +1,100 @@
 basePath: /api/v1
+definitions:
+  controllers.SignInInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      verification_code:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controllers.SignUpInput:
+    properties:
+      email:
+        description: Username          string `swaggerignore:"true" json:"username"
+          `
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  migrations.Users:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      id_user:
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:9888
 info:
   contact: {}
+  description: This is a  server BackChat.
+  title: BackChat Api
+  version: "1.0"
 paths:
+  /example/SignUp:
+    post:
+      consumes:
+      - application/json
+      description: register a new user
+      parameters:
+      - description: user
+        in: body
+        name: get
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.SignUpInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.SignUpInput'
+        "400":
+          description: email is not unique
+        "500":
+          description: user registration failed
+      summary: writes the user to the database
+      tags:
+      - Сreate a new account
+  /example/SingIn:
+    post:
+      description: User login to the system by mail, password, verification code
+      operationId: login
+      parameters:
+      - description: ' login user'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: jwt
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - auth
   /example/helloworld:
     get:
       consumes:
@@ -17,4 +110,18 @@ paths:
       summary: ping example
       tags:
       - example
+  /example/userID:
+    get:
+      consumes:
+      - application/json
+      description: getting all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/migrations.Users'
+            type: array
 swagger: "2.0"
