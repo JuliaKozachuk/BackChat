@@ -76,3 +76,22 @@ func FindUserByUsername(email, verification_code string) (Users, error) {
 	}
 	return user, nil
 }
+func FindUserByEmail(email, magic string) (Users, error) {
+	var input Users
+	err := DB.Where("email = ? AND magic = ?", email, magic).Find(&input).Error
+	if err != nil {
+		return Users{}, err
+	}
+
+	return input, nil
+}
+func (u *Users) UpdateUser() (*Users, error) {
+	u.Status = "active"
+
+	err := DB.Update(u.Status).Error
+	if err != nil {
+		return &Users{}, err
+	}
+
+	return u, nil
+}
