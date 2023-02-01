@@ -29,6 +29,8 @@ type Users struct {
 	Password          string `gorm:"size:255;not null;" json:"-"` //Опривязка JSON для Password поля — -. Это гарантирует, что пароль пользователя не будет возвращен в ответе JSON.
 	Email             string `gorm:"size:255;not null;unique" json:"email"`
 	Verification_code string `json:"-"`
+	Status            string `json:"status"`
+	Magic             string `json:"magic"`
 }
 
 // добавляет в базу нового пользователя

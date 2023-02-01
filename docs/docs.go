@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.SignUpInput"
+                            "$ref": "#/definitions/v1.SignUpInput"
                         }
                     }
                 ],
@@ -44,7 +44,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.SignUpInput"
+                            "$ref": "#/definitions/v1.SignUpInput"
                         }
                     },
                     "400": {
@@ -74,7 +74,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.SignInInput"
+                            "$ref": "#/definitions/v1.SignInInput"
                         }
                     }
                 ],
@@ -135,40 +135,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.SignInInput": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "verification_code": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.SignUpInput": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "description": "Username          string ` + "`" + `swaggerignore:\"true\" json:\"username\" ` + "`" + `",
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
         "migrations.Users": {
             "type": "object",
             "properties": {
@@ -191,6 +157,40 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.SignInInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "verification_code": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.SignUpInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "description": "Username          string ` + "`" + `swaggerignore:\"true\" json:\"username\" ` + "`" + `",
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

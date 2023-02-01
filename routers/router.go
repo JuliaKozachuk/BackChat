@@ -30,6 +30,12 @@ import (
 func Helloworld(g *gin.Context) {
 	g.JSON(http.StatusOK, "helloworld")
 }
+
+func Helloworld2(g *gin.Context) {
+
+	g.JSON(http.StatusOK, "helloworld")
+}
+
 func InitRouter() {
 	route := gin.Default()
 
@@ -42,7 +48,9 @@ func InitRouter() {
 			eg.GET("/helloworld", Helloworld)
 			eg.POST("/SignUp", v1.SignUp)
 			eg.POST("/SingIn", v1.SingIn)
+
 			eg.GET("/userID", controllers.GetAllUsers)
+
 		}
 
 	}
@@ -50,6 +58,7 @@ func InitRouter() {
 		context.JSON(http.StatusOK, gin.H{"message": migrations.Alex()})
 	})
 	route.GET("/userID", controllers.GetAllUsers)
+	route.GET("/signupconfirm", v1.SignUpConfirm)
 
 	migrations.ConnectDB(postgresUrl())
 
