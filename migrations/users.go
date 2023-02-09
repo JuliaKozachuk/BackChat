@@ -95,3 +95,11 @@ func (u *Users) UpdateUser() (*Users, error) {
 
 	return u, nil
 }
+func FindUserById(id uint) (Users, error) {
+	var user Users
+	err := DB.Where("id_user=?", id).Find(&user).Error
+	if err != nil {
+		return Users{}, err
+	}
+	return user, nil
+}

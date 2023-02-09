@@ -58,4 +58,5 @@ func SingIn(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{"jwt": jwt})
+
 }

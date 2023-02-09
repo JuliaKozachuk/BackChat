@@ -60,6 +60,12 @@ func InitRouter() {
 	route.GET("/userID", controllers.GetAllUsers)
 	route.GET("/signupconfirm", v1.SignUpConfirm)
 
+	route.GET("/users", func(context *gin.Context) {
+		context.JSON(200, gin.H{
+			"token_data": context.Request.Header["Autorization"],
+		})
+	})
+
 	migrations.ConnectDB(postgresUrl())
 
 	//route.POST("/signup", controllers.SignUpInput)
