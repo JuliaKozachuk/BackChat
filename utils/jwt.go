@@ -28,6 +28,8 @@ func GenerateJWT(user migrations.Users) (string, error) {
 	})
 	return token.SignedString(privateKey)
 }
+
+// функция гарантирует, что входящий запрос содержит допустимый токен в заголовке запроса.
 func ValidateJWT(context *gin.Context) error {
 	token, err := getToken(context)
 	if err != nil {
@@ -40,6 +42,7 @@ func ValidateJWT(context *gin.Context) error {
 	return errors.New("invalid token provided")
 }
 
+// будет использоваться для получения пользователя, связанного с предоставленным JWT, путем извлечения ключа идентификатора из проанализированного JWT и извлечения соответствующего пользователя из базы данных.
 func CurrentUser(context *gin.Context) (migrations.Users, error) {
 	err := ValidateJWT(context)
 	if err != nil {
@@ -56,6 +59,7 @@ func CurrentUser(context *gin.Context) (migrations.Users, error) {
 	return user, nil
 }
 
+// использует возвращенную строку маркера для анализа JWT с использованием закрытого ключа, указанного в env
 func getToken(context *gin.Context) (*jwt.Token, error) {
 	tokenString := getTokenFromRequest(context)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -68,6 +72,7 @@ func getToken(context *gin.Context) (*jwt.Token, error) {
 	return token, err
 }
 
+// извлекает маркер носителя из запроса.
 func getTokenFromRequest(context *gin.Context) string {
 	bearerToken := context.Request.Header.Get("Authorization")
 	splitToken := strings.Split(bearerToken, " ")

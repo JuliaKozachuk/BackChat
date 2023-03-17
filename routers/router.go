@@ -50,6 +50,7 @@ func InitRouter() {
 			eg.POST("/SingIn", v1.SingIn)
 
 			eg.GET("/userID", controllers.GetAllUsers)
+			eg.GET("/user", v1.User)
 
 		}
 
@@ -96,6 +97,7 @@ func postgresUrl() string {
 	sslmode := os.Getenv("POSTRES_SSLMODE")
 
 	postgres_data := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s ", host, port, user, dbname, password, sslmode)
+	fmt.Println(postgres_data)
 
 	return postgres_data
 }
