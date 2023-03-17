@@ -13,9 +13,8 @@ type SignUpConfirmInput struct {
 	Magic string `form:"magic"`
 }
 
-// HTTP GET with query params
 func SignUpConfirm(context *gin.Context) {
-	// Step 1. Получаем Email и Magic
+
 	var input SignUpConfirmInput
 	if context.Bind(&input) == nil {
 		log.Println(input.Email)
@@ -26,9 +25,6 @@ func SignUpConfirm(context *gin.Context) {
 	}
 	/////////////////////////////////////////////////////
 
-	// Step 2. Ищем в базе юзера по емейл и magic
-	// если нет то выход ошибка
-	// Step 3. Обновляем юзеру статус status="active"
 	user, err := migrations.FindUserByEmail(input.Email, input.Magic)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

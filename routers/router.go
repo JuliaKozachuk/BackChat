@@ -69,13 +69,7 @@ func InitRouter() {
 
 	migrations.ConnectDB(postgresUrl())
 
-	//route.POST("/signup", controllers.SignUpInput)
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	//route.POST("/getaut", controllers.GetAuth)
-	//route.POST("/login", controllers.SingIn)
-	//route.POST("/signup", controllers.SignUp)
-
-	//route.POST("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	err := route.Run(":9888")
 	if err != nil {

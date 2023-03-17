@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	//"github.com/go-redis/redis/v8/internal/util"
 )
 
 func User(context *gin.Context) {
@@ -14,7 +13,5 @@ func User(context *gin.Context) {
 	context.JSON(200, gin.H{
 		"token_data": context.Request.Header["Autorization"],
 	})
-
-	// var access_token context.Request.Header["Autorization"]
 
 }

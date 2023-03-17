@@ -15,15 +15,11 @@ import (
 	_ "github.com/JuliaKozachuk/BackChat/docs"
 )
 
-// отправляет код подтверждения для созданного юзера
 func SendUserEmail(email string, confirm_url string) {
 
 	url := "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send"
 	rkey := os.Getenv("RAPID_KEY")
 	rhost := os.Getenv("RAPID_HOST")
-
-	// numb := numbergenerate()
-	// code = strconv.Itoa(int(numb))
 
 	payload := strings.NewReader("{\r\"personalizations\": [\r{\r\"to\": [\r{\r\"email\": \"" + email + "\"\r}\r],\r\"subject\": \"password:" + confirm_url + "\"\r}\r],\r\"from\": {\r\"email\": \"uliakozacuk649@gmail.com\"\r},\r\"content\": [\r{\r\"type\": \"text/plain\",\r\"value\": \"password:" + confirm_url + "\"\r}\r]\r}")
 
@@ -42,7 +38,6 @@ func SendUserEmail(email string, confirm_url string) {
 	fmt.Println(string(body))
 }
 
-// генерация рандомных чисел для кода
 func Numbergenerate() int64 {
 	safeNum, err := rand.Int(rand.Reader, big.NewInt(80000000000000))
 	if err != nil {

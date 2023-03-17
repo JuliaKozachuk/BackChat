@@ -14,10 +14,8 @@ import (
 )
 
 type SignUpInput struct {
-	//Username          string `swaggerignore:"true" json:"username" `
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	//Verification_code string `swaggerignore:"true" json:"verification_code"` //swaggerignore, чтобы исключить поле из зоны видимости сваггера
 }
 
 // @Summary writes the user to the database

@@ -65,11 +65,3 @@ func DeleteUser(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{"users": true})
 }
-
-// $HOME
-// /home/julia
-// ~/
-
-// /home/julia/projects
-
-// export GOPATH=$HOME/projects:/usr/bin/go
