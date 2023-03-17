@@ -7,7 +7,6 @@ import (
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/utils"
 	"github.com/gin-gonic/gin"
-	//"github.com/go-redis/redis/v8/internal/util"
 )
 
 type SignInInput struct {
@@ -58,4 +57,5 @@ func SingIn(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{"jwt": jwt})
+
 }

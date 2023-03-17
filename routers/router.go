@@ -30,6 +30,12 @@ import (
 func Helloworld(g *gin.Context) {
 	g.JSON(http.StatusOK, "helloworld")
 }
+
+func Helloworld2(g *gin.Context) {
+
+	g.JSON(http.StatusOK, "helloworld")
+}
+
 func InitRouter() {
 	route := gin.Default()
 
@@ -42,7 +48,10 @@ func InitRouter() {
 			eg.GET("/helloworld", Helloworld)
 			eg.POST("/SignUp", v1.SignUp)
 			eg.POST("/SingIn", v1.SingIn)
+
 			eg.GET("/userID", controllers.GetAllUsers)
+			eg.GET("/user", v1.User)
+
 		}
 
 	}
@@ -50,16 +59,17 @@ func InitRouter() {
 		context.JSON(http.StatusOK, gin.H{"message": migrations.Alex()})
 	})
 	route.GET("/userID", controllers.GetAllUsers)
+	route.GET("/signupconfirm", v1.SignUpConfirm)
+
+	route.GET("/users", func(context *gin.Context) {
+		context.JSON(200, gin.H{
+			"token_data": context.Request.Header["Autorization"],
+		})
+	})
 
 	migrations.ConnectDB(postgresUrl())
 
-	//route.POST("/signup", controllers.SignUpInput)
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	//route.POST("/getaut", controllers.GetAuth)
-	//route.POST("/login", controllers.SingIn)
-	//route.POST("/signup", controllers.SignUp)
-
-	//route.POST("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	err := route.Run(":9888")
 	if err != nil {
@@ -81,6 +91,7 @@ func postgresUrl() string {
 	sslmode := os.Getenv("POSTRES_SSLMODE")
 
 	postgres_data := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s ", host, port, user, dbname, password, sslmode)
+	fmt.Println(postgres_data)
 
 	return postgres_data
 }

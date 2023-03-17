@@ -21,9 +21,5 @@ func main() {
 	redisconnect.Setup()
 
 	routers.InitRouter()
-	//  if err != nil {
-	//  	panic("[Error] failed to start Gin server due to: " + err.Error())
-	//  }
-	// 	d := controllers.Logingenerate(150)
-	// 	fmt.Println(d)
+
 }

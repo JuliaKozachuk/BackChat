@@ -1,29 +1,5 @@
 basePath: /api/v1
 definitions:
-  controllers.SignInInput:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-      verification_code:
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  controllers.SignUpInput:
-    properties:
-      email:
-        description: Username          string `swaggerignore:"true" json:"username"
-          `
-        type: string
-      password:
-        type: string
-    required:
-    - email
-    - password
-    type: object
   migrations.Users:
     properties:
       created_at:
@@ -40,6 +16,30 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  v1.SignInInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      verification_code:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  v1.SignUpInput:
+    properties:
+      email:
+        description: Username          string `swaggerignore:"true" json:"username"
+          `
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
     type: object
 host: localhost:9888
 info:
@@ -59,14 +59,14 @@ paths:
         name: get
         required: true
         schema:
-          $ref: '#/definitions/controllers.SignUpInput'
+          $ref: '#/definitions/v1.SignUpInput'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.SignUpInput'
+            $ref: '#/definitions/v1.SignUpInput'
         "400":
           description: email is not unique
         "500":
@@ -84,7 +84,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/controllers.SignInInput'
+          $ref: '#/definitions/v1.SignInInput'
       produces:
       - application/json
       responses:

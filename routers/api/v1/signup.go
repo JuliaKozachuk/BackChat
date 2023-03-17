@@ -1,8 +1,11 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/google/uuid"
 
 	"github.com/JuliaKozachuk/BackChat/migrations"
 	"github.com/JuliaKozachuk/BackChat/utils"
@@ -11,10 +14,8 @@ import (
 )
 
 type SignUpInput struct {
-	//Username          string `swaggerignore:"true" json:"username" `
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	//Verification_code string `swaggerignore:"true" json:"verification_code"` //swaggerignore, чтобы исключить поле из зоны видимости сваггера
 }
 
 // @Summary writes the user to the database
@@ -42,16 +43,26 @@ func SignUp(context *gin.Context) {
 	//get.Verification_code = code
 
 	//get.Username = "BlackUser-" + code
+	// генерация динамической строки
+	//
+	intermagic := uuid.New()
+
+	magic := (intermagic.String())
 
 	user := migrations.Users{
 		Email:             get.Email,
 		Password:          get.Password,
 		Username:          randomstring + code,
 		Verification_code: code,
+		Magic:             magic,
 	}
 
+	email := get.Email
+
+	confirm_url := fmt.Sprintf("http://localhost:9888/signupconfirm?email=%s@&magic=%s", email, magic)
+
 	savedUser, err := user.SaveUser()
-	utils.SendUserEmail(get.Email, code)
+	utils.SendUserEmail(get.Email, confirm_url)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
